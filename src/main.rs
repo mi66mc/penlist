@@ -57,7 +57,6 @@ fn remove(list: &mut Vec<TodoItem>, id: u16) {
 }
 
 fn display_todo(list: &Vec<TodoItem>) {
-    clear_terminal_screen();
     for i in list {
         if i.completed {
             let s = format!("{} {:03}: {}", "󰄲".blue(), i.id, i.title).strikethrough().bright_black();
@@ -102,15 +101,20 @@ fn parse_command(input: &str, list: &mut Vec<TodoItem>) {
 fn main() {
     let mut todo_list: Vec<TodoItem> = Vec::new();
     clear_terminal_screen();
-    add(&mut todo_list, "Hello");
+    add(&mut todo_list, &format!("{}", "Type \"help\" for help".yellow()));
     display_todo(&todo_list);
     
     loop {
         let command = read_command();
         if command == "quit" {
             break;
+        } else if command == "help" {
+            clear_terminal_screen();
+            println!("  help: prints this message.\n  add <title>: adds an item to the list.\n  remove <id>: remove an item from the list.\n  toggle <id>: toggle an item to checked and unchecked such as 󰄱 and 󰄲\n  quit: quit from application.");
+        } else {
+            clear_terminal_screen();
+            parse_command(&command, &mut todo_list);
+            display_todo(&todo_list);
         }
-        parse_command(&command, &mut todo_list);
-        display_todo(&todo_list);
     }
 }
