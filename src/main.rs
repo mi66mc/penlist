@@ -72,7 +72,7 @@ fn remove(list: &mut Vec<TodoItem>, id: u16) {
 }
 
 fn display_todo(list: &Vec<TodoItem>) {
-    println!("{}", "────────────────────────────\n🐧 PenList\n────────────────────────────".blue());
+    println!("{}", "────────────────────────────\n🐧 PenList\n────────────────────────────".blue().bold());
     for i in list {
         if i.completed {
             let s = format!("{} {:03}: {}", "󰄲".blue(), i.id, i.title).strikethrough().bright_black();
@@ -85,6 +85,7 @@ fn display_todo(list: &Vec<TodoItem>) {
 }
 
 fn read_command() -> String {
+    println!("{}", "────────────────────────────".blue().bold());
     print!("> ");
     io::stdout().flush().expect("Failed to flush stdout");
     let mut input = String::new();
