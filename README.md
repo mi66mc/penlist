@@ -3,7 +3,7 @@
 Todo List console based application written in Rust.
 
 <p align="center">
-    <img src="https://imgur.com/tLV8dKj"/>
+    <img src="https://imgur.com/tLV8dKj.png"/>
 </p>
 
 ### 📋 Pré-requisitos
