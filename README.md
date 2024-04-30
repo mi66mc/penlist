@@ -50,6 +50,8 @@ In the `>` prompt, you can access all commands and aliases with `help` command, 
 - `remove <id>`: remove an item from the list.
 - `toggle <id>`: toggle an item to checked and unchecked such as ☐ and ☑
 - `quit`: quit from application.
+- `save <filename>`: save your todo list into a file.
+- `load <filename>`: load your todo list from a file.
 
 - Aliases: `help`: (`h`); `add`: (`a`); `remove`: (`rm`); `toggle`: (`done`, `dn`); `quit`: (`q`);
 
@@ -60,7 +62,7 @@ In the `>` prompt, you can access all commands and aliases with `help` command, 
 ## ✔️ To Do
 
 - [x] Aliases
-- [ ] Option to save todo list into a file.
+- [x] Option to save todo list into a file.
 
 ## ✒️ Author
 

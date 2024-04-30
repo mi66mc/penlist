@@ -1,10 +1,25 @@
 use colored::Colorize;
 use std::io::{self, Write};
+use serde::{Serialize, Deserialize};
+use std::fs;
 
+#[derive(Serialize, Deserialize)]
 struct TodoItem {
     id: u16,
     title: String,
     completed: bool
+}
+
+fn save_todo_list(list: &[TodoItem], filename: &str) -> std::io::Result<()> {
+    let serialized = serde_json::to_string(&list)?;
+    fs::write(filename, serialized)?;
+    Ok(())
+}
+
+fn load_todo_list(filename: &str) -> std::io::Result<Vec<TodoItem>> {
+    let content = fs::read_to_string(filename)?;
+    let deserialized: Vec<TodoItem> = serde_json::from_str(&content)?;
+    Ok(deserialized)
 }
 
 pub fn clear_terminal_screen() {
@@ -37,7 +52,7 @@ fn toggle(list: &mut Vec<TodoItem>, id: u16) {
     if let Some(item) = list.iter_mut().find(|item| item.id == id) {
         item.completed = !item.completed;
     } else {
-        println!("Todo item with ID {} not found.", id);
+        println!("{}", format!("Todo item with ID {} not found.", id).bright_red());
     }
 }
 
@@ -52,12 +67,12 @@ fn remove(list: &mut Vec<TodoItem>, id: u16) {
         list.remove(index);
         adjust_ids(list);
     } else {
-        println!("Todo item with ID {} not found.", id);
+        println!("{}", format!("Todo item with ID {} not found.", id).bright_red());
     }
 }
 
 fn display_todo(list: &Vec<TodoItem>) {
-    println!("{}", "🐧 PenList\n────────────────────────────".blue());
+    println!("{}", "────────────────────────────\n🐧 PenList\n────────────────────────────".blue());
     for i in list {
         if i.completed {
             let s = format!("{} {:03}: {}", "󰄲".blue(), i.id, i.title).strikethrough().bright_black();
@@ -85,17 +100,33 @@ fn parse_command(input: &str, list: &mut Vec<TodoItem>) {
             if let Ok(id) = id.parse::<u16>() {
                 remove(list, id)
             } else {
-                println!("Invalid ID format.")
+                println!("{}", "Invalid ID format.".red())
             }
         }
         ["toggle", id] | ["done", id] | ["dn", id] => {
             if let Ok(id) = id.parse::<u16>() {
                 toggle(list, id)
             } else {
-                println!("Invalid ID format.")
+                println!("{}", "Invalid ID format.".red())
             }
         }
-        _ => println!("Invalid command."),
+        ["save", filename] => {
+            if let Err(err) = save_todo_list(list, filename) {
+                println!("{}", format!("Error saving todo list: {}", err).bright_red());
+            } else {
+                println!("{}", "Todo list saved successfully.".bright_green());
+            }
+        }
+        ["load", filename] => {
+            match load_todo_list(filename) {
+                Ok(loaded_list) => {
+                    *list = loaded_list;
+                    println!("{}", "Todo list loaded successfully.".bright_green());
+                }
+                Err(err) => println!("{}", format!("Error loading todo list: {}", err).red()),
+            }
+        }
+        _ => println!("{}", "Invalid command.".bright_red()),
     }
 }
 
@@ -111,16 +142,18 @@ fn main() {
         match command.as_str() {
             "quit" | "q" => break,
             "help" | "h" => {
-                println!("{}", "🐧 PenList\n────────────────────────────".blue());
-                println!(
+                println!("{}", "────────────────────────────\n🐧 PenList\n────────────────────────────".blue());
+                println!("{}",
 "  help: prints this message.
   add <title>: adds an item to the list.
   remove <id>: remove an item from the list.
   toggle <id>: toggle an item to checked and unchecked such as 󰄱 and 󰄲
   quit: quit from application.
+  save <filename>: save your todo list into a file.
+  load <filename>: load your todo list from a file.
 
   Aliases: help: (h); add: (a); remove: (rm); toggle: (done, dn); quit: (q);
-"
+".bright_black()
                 );
             },
             _ => {
