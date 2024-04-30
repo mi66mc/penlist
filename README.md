@@ -2,6 +2,10 @@
 
 Todo List console based application written in Rust.
 
+<p align="center">
+    <img src="https://imgur.com/tLV8dKj"/>
+</p>
+
 ### 📋 Pré-requisitos
 
 `Rust`, `Cargo` installed in your machine and a `Nerd Font` to icons appears properly in your machine.
