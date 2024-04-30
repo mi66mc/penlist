@@ -82,15 +82,35 @@ fn display_todo(list: &Vec<TodoItem>) {
             println!("{}", s);
         }
     }
+    
 }
 
-fn read_command() -> String {
-    println!("{}", "────────────────────────────".blue().bold());
+fn read_command(list: &Vec<TodoItem>) -> String {
+    println!("{}", progress_bar(list));
     print!("> ");
     io::stdout().flush().expect("Failed to flush stdout");
     let mut input = String::new();
     io::stdin().read_line(&mut input).expect("Failed to read line");
     input.trim().to_string()
+}
+
+fn progress_bar(list: &Vec<TodoItem>) -> String {
+    let total_items = list.len();
+    let completed_items = list.iter().filter(|item| item.completed).count();
+    let progress_bar_length = 28;
+    let progress = if total_items > 0 {
+        completed_items as f32 / total_items as f32
+    } else {
+        0.0
+    };
+    let progress_bar_filled = (progress * progress_bar_length as f32) as usize;
+    let progress_bar_empty = progress_bar_length - progress_bar_filled;
+    let progress_bar = format!(
+        "{}{}",
+        "─".repeat(progress_bar_filled).bright_green(),
+        "─".repeat(progress_bar_empty).bright_black()
+    );
+    format!("{} {}/{}", progress_bar, completed_items, total_items)
 }
 
 fn parse_command(input: &str, list: &mut Vec<TodoItem>) {
@@ -138,7 +158,7 @@ fn main() {
     display_todo(&todo_list);
     
     loop {
-        let command = read_command();
+        let command = read_command(&todo_list);
         clear_terminal_screen();
         match command.as_str() {
             "quit" | "q" => break,
