@@ -57,7 +57,9 @@ In the `>` prompt, you can access all commands and aliases with `help` command, 
 
 ## 🛠️ Project Dependencies
 
-* [Colored](https://crates.io/crates/colored) - Rust crate
+* [colored](https://crates.io/crates/colored) - Colorize the terminal, prettier
+* [serde_json](https://github.com/serde-rs/https://crates.io/crates/serde_json) - To load and save JSON
+* [serde](https://crates.io/crates/serde) - Serializing and deserializing
 
 ## ✔️ To Do
 
