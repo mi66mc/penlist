@@ -114,20 +114,23 @@ fn main() {
 
     loop {
         let command = read_command();
+        clear_terminal_screen();
         match command.as_str() {
-            "quit" => break,
-            "help" => {
-                clear_terminal_screen();
+            "quit" | "q" => break,
+            "help" | "h" => {
+                println!("{}", "🐧 PenList\n────────────────────────────".blue());
                 println!(
-                    "  help: prints this message.
+"  help: prints this message.
   add <title>: adds an item to the list.
   remove <id>: remove an item from the list.
   toggle <id>: toggle an item to checked and unchecked such as 󰄱 and 󰄲
-  quit: quit from application."
+  quit: quit from application.
+
+  Aliases: help: (h); add: (a); remove: (rm); toggle: (done, dn); quit: (q);
+"
                 );
-            }
+            },
             _ => {
-                clear_terminal_screen();
                 parse_command(&command, &mut todo_list);
                 display_todo(&todo_list);
             }
