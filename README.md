@@ -2,6 +2,8 @@
 
 Todo List console based application written in Rust.
 
+**[Cargo penlist](https://crates.io/crates/penlist/)**
+
 <p align="center">
     <img src="https://imgur.com/tLV8dKj.png"/>
 </p>
