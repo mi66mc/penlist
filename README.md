@@ -10,7 +10,7 @@ Todo List console based application written in Rust.
 
 `Rust`, `Cargo` installed in your machine and a `Nerd Font` to icons appears properly in your machine.
 
-**[Dependencies](#🛠️-project-dependencies)** are automatically installed.
+**[Dependencies](#-project-dependencies)** are automatically installed.
 
 ### 🔧 Install
 
