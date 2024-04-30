@@ -1,16 +1,13 @@
 [package]
 name = "penlist"
-version = "0.0.3"
+version = "0.0.4"
 edition = "2021"
-description = "Todo List console based application written in Rust."
-license = "MIT"
+description = "A To-do List console-based application written in Rust."
 keywords = ["todo", "list", "cli"]
 license-file = "LICENSE"
 categories = ["command-line-utilities"]
 readme = "README.md"
 repository = "https://github.com/mi66mc/penlist"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 colored = "2.1.0"

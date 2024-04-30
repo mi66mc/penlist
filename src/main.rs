@@ -1,22 +1,23 @@
 use colored::Colorize;
 use std::io::{self, Write};
+use std::process::Command;
 
 struct TodoItem {
     id: u16,
     title: String,
-    completed: bool
+    completed: bool,
 }
 
 pub fn clear_terminal_screen() {
     if cfg!(target_os = "windows") {
-        std::process::Command::new("cmd")
+        Command::new("cmd")
             .args(["/c", "cls"])
             .spawn()
             .expect("cls command failed to start")
             .wait()
             .expect("failed to wait");
     } else {
-        std::process::Command::new("clear")
+        Command::new("clear")
             .spawn()
             .expect("clear command failed to start")
             .wait()
@@ -28,12 +29,12 @@ fn add(list: &mut Vec<TodoItem>, title: &str) {
     let item = TodoItem {
         id: list.len() as u16 + 1,
         title: title.to_string(),
-        completed: false
+        completed: false,
     };
     list.push(item);
 }
 
-fn toggle(list: &mut Vec<TodoItem>, id: u16) {
+fn toggle(list: &mut [TodoItem], id: u16) {
     if let Some(item) = list.iter_mut().find(|item| item.id == id) {
         item.completed = !item.completed;
     } else {
@@ -41,7 +42,7 @@ fn toggle(list: &mut Vec<TodoItem>, id: u16) {
     }
 }
 
-fn adjust_ids(list: &mut Vec<TodoItem>) {
+fn adjust_ids(list: &mut [TodoItem]) {
     for (index, item) in list.iter_mut().enumerate() {
         item.id = index as u16 + 1;
     }
@@ -59,7 +60,9 @@ fn remove(list: &mut Vec<TodoItem>, id: u16) {
 fn display_todo(list: &Vec<TodoItem>) {
     for i in list {
         if i.completed {
-            let s = format!("{} {:03}: {}", "󰄲".blue(), i.id, i.title).strikethrough().bright_black();
+            let s = format!("{} {:03}: {}", "󰄲".blue(), i.id, i.title)
+                .strikethrough()
+                .bright_black();
             println!("{}", s);
         } else {
             let s = format!("{} {:03}: {}", "󰄱".red(), i.id, i.title);
@@ -72,7 +75,9 @@ fn read_command() -> String {
     print!("> ");
     io::stdout().flush().expect("Failed to flush stdout");
     let mut input = String::new();
-    io::stdin().read_line(&mut input).expect("Failed to read line");
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line");
     input.trim().to_string()
 }
 
@@ -101,20 +106,31 @@ fn parse_command(input: &str, list: &mut Vec<TodoItem>) {
 fn main() {
     let mut todo_list: Vec<TodoItem> = Vec::new();
     clear_terminal_screen();
-    add(&mut todo_list, &format!("{}", "Type \"help\" for help".yellow()));
+    add(
+        &mut todo_list,
+        &format!("{}", "Type \"help\" for help".yellow()),
+    );
     display_todo(&todo_list);
-    
+
     loop {
         let command = read_command();
-        if command == "quit" {
-            break;
-        } else if command == "help" {
-            clear_terminal_screen();
-            println!("  help: prints this message.\n  add <title>: adds an item to the list.\n  remove <id>: remove an item from the list.\n  toggle <id>: toggle an item to checked and unchecked such as 󰄱 and 󰄲\n  quit: quit from application.");
-        } else {
-            clear_terminal_screen();
-            parse_command(&command, &mut todo_list);
-            display_todo(&todo_list);
+        match command.as_str() {
+            "quit" => break,
+            "help" => {
+                clear_terminal_screen();
+                println!(
+                    "  help: prints this message.
+  add <title>: adds an item to the list.
+  remove <id>: remove an item from the list.
+  toggle <id>: toggle an item to checked and unchecked such as 󰄱 and 󰄲
+  quit: quit from application."
+                );
+            }
+            _ => {
+                clear_terminal_screen();
+                parse_command(&command, &mut todo_list);
+                display_todo(&todo_list);
+            }
         }
     }
 }
