@@ -57,6 +57,7 @@ fn remove(list: &mut Vec<TodoItem>, id: u16) {
 }
 
 fn display_todo(list: &Vec<TodoItem>) {
+    println!("{}", "🐧 PenList\n────────────────────────────".blue());
     for i in list {
         if i.completed {
             let s = format!("{} {:03}: {}", "󰄲".blue(), i.id, i.title).strikethrough().bright_black();
@@ -79,15 +80,15 @@ fn read_command() -> String {
 fn parse_command(input: &str, list: &mut Vec<TodoItem>) {
     let parts: Vec<&str> = input.splitn(2, ' ').collect();
     match parts.as_slice() {
-        ["add", title] => add(list, title),
-        ["remove", id] => {
+        ["add", title] | ["a", title] => add(list, title),
+        ["remove", id] | ["rm", id] => {
             if let Ok(id) = id.parse::<u16>() {
                 remove(list, id)
             } else {
                 println!("Invalid ID format.")
             }
         }
-        ["toggle", id] => {
+        ["toggle", id] | ["done", id] | ["dn", id] => {
             if let Ok(id) = id.parse::<u16>() {
                 toggle(list, id)
             } else {
@@ -106,15 +107,26 @@ fn main() {
     
     loop {
         let command = read_command();
-        if command == "quit" {
-            break;
-        } else if command == "help" {
-            clear_terminal_screen();
-            println!("  help: prints this message.\n  add <title>: adds an item to the list.\n  remove <id>: remove an item from the list.\n  toggle <id>: toggle an item to checked and unchecked such as 󰄱 and 󰄲\n  quit: quit from application.");
-        } else {
-            clear_terminal_screen();
-            parse_command(&command, &mut todo_list);
-            display_todo(&todo_list);
+        clear_terminal_screen();
+        match command.as_str() {
+            "quit" | "q" => break,
+            "help" | "h" => {
+                println!("{}", "🐧 PenList\n────────────────────────────".blue());
+                println!(
+"  help: prints this message.
+  add <title>: adds an item to the list.
+  remove <id>: remove an item from the list.
+  toggle <id>: toggle an item to checked and unchecked such as 󰄱 and 󰄲
+  quit: quit from application.
+
+  Aliases: help: (h); add: (a); remove: (rm); toggle: (done, dn); quit: (q);
+"
+                );
+            },
+            _ => {
+                parse_command(&command, &mut todo_list);
+                display_todo(&todo_list);
+            }
         }
     }
 }
