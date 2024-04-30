@@ -57,7 +57,7 @@ In the `>` prompt, you can access all commands and aliases with `help` command, 
 
 * [Colored](https://crates.io/crates/colored) - Rust crate
 
-## To Do
+## ✔️ To Do
 
 - [x] Aliases
 - [ ] Option to save todo list into a file.
