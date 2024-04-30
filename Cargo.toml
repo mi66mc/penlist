@@ -1,6 +1,6 @@
 [package]
 name = "penlist"
-version = "0.0.7"
+version = "0.0.9"
 edition = "2021"
 description = "Todo List console based application written in Rust."
 license = "MIT"
@@ -16,4 +16,3 @@ repository = "https://github.com/mi66mc/penlist"
 colored = "2.1.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-term_size = "0.3.2"

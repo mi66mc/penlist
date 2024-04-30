@@ -67,7 +67,7 @@ In the `>` prompt, you can access all commands and aliases with `help` command, 
 
 - [x] Aliases
 - [x] Option to save todo list into a file.
-- [ ] Progess bar.
+- [x] Progess bar.
 - [ ] Content prettier and in the middle.
 
 ## ✒️ Author
