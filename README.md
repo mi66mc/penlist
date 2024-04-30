@@ -1,9 +1,11 @@
 # penlist
 
-Todo List console based application written in Rust.
+<div align="center">
 
-**[Cargo penlist](https://crates.io/crates/penlist/)**
+**Todo List console based application written in Rust.**
 
+[![Crates.io](https://img.shields.io/crates/v/penlist)](https://crates.io/crates/penlist)
+</div>
 <p align="center">
     <img src="https://imgur.com/tLV8dKj.png"/>
 </p>
@@ -11,6 +13,10 @@ Todo List console based application written in Rust.
 ### 📋 Requirements
 
 `Rust`, `Cargo` installed in your machine and a `Nerd Font` to icons appears properly in your machine.
+
+- `Rust`
+- `Cargo`
+- `Nerd Font`
 
 **[Dependencies](#-project-dependencies)** are automatically installed.
 
@@ -30,13 +36,35 @@ To run the application just type this in your terminal:
 $ penlist
 ```
 
+```
+🐧 PenList
+────────────────────────────
+☐ 001: Type "help" for help
+>
+```
+
+In the `>` prompt, you can access all commands and aliases with `help` command, an there are the commands:
+
+- `help`: prints help message.
+- `add <title>`: adds an item to the list.
+- `remove <id>`: remove an item from the list.
+- `toggle <id>`: toggle an item to checked and unchecked such as ☐ and ☑
+- `quit`: quit from application.
+
+- Aliases: `help`: (`h`); `add`: (`a`); `remove`: (`rm`); `toggle`: (`done`, `dn`); `quit`: (`q`);
+
 ## 🛠️ Project Dependencies
 
 * [Colored](https://crates.io/crates/colored) - Rust crate
 
+## To Do
+
+- [x] Aliases
+- [ ] Option to save todo list into a file.
+
 ## ✒️ Author
 
-* **Me** - [mi66mc](https://github.com/mi66mc)
+* **Original Author** - [mi66mc](https://github.com/mi66mc)
 
 ## 📄 License
 
