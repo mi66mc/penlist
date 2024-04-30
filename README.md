@@ -1,22 +1,20 @@
-# penlist
+# [penlist](https://crates.io/crates/penlist/)
 
-Todo List console based application written in Rust.
+![A preview of cargo penlist](https://imgur.com/tLV8dKj.png)
 
-**[Cargo penlist](https://crates.io/crates/penlist/)**
+A To-do List console-based application written in `Rust`.
 
-<p align="center">
-    <img src="https://imgur.com/tLV8dKj.png"/>
-</p>
+## 📋 Requirements
 
-### 📋 Requirements
+`Rust` and `Cargo` must be installed in your machine.
 
-`Rust`, `Cargo` installed in your machine and a `Nerd Font` to icons appears properly in your machine.
+`Nerd Font` should be used to display icons properly in your machine.
 
-**[Dependencies](#-project-dependencies)** are automatically installed.
+**[Project dependencies](?tab=readme-ov-file#%EF%B8%8F-project-dependencies)** are automatically installed.
 
-### 🔧 Install
+## 🔧 Install
 
-To install it just execute this:
+Execute this command in your terminal:
 
 ```
 $ cargo install penlist
@@ -24,11 +22,23 @@ $ cargo install penlist
 
 ## ⚙️ Running
 
-To run the application just type this in your terminal:
+Type this in your terminal:
 
 ```
 $ penlist
 ```
+
+## Example
+
+```
+$ penlist
+add Finish this demo
+toggle 002
+remove 002
+quit
+```
+
+🚨 All tasks will be removed once you type `quit`!
 
 ## 🛠️ Project Dependencies
 
@@ -40,4 +50,4 @@ $ penlist
 
 ## 📄 License
 
-[MIT LICENSE](https://github.com/mi66mc/penlist/LICENSE)
+This project is licensed under the [MIT LICENSE](https://github.com/mi66mc/penlist/LICENSE); [SUMMARY](https://choosealicense.com/licenses/mit/)
