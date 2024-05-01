@@ -2,6 +2,8 @@ use colored::Colorize;
 use std::io::{self, Write};
 use serde::{Serialize, Deserialize};
 use std::fs;
+use term_size;
+use regex::Regex;
 
 #[derive(Serialize, Deserialize)]
 struct TodoItem {
@@ -72,21 +74,39 @@ fn remove(list: &mut Vec<TodoItem>, id: u16) {
 }
 
 fn display_todo(list: &Vec<TodoItem>) {
-    println!("{}", "────────────────────────────\n🐧 PenList\n────────────────────────────".blue().bold());
+    let re = Regex::new("\x1b\\[([0-9]+;)*[0-9]*m").unwrap();
+    let mut max_p: Vec<usize> = Vec::new();
+    let w = term_size::dimensions().unwrap().0;
+    println!("{}", "─".repeat(w).blue().bold());
+    center_print(&"🐧 PenList".blue().bold().to_string());
+    println!("{}", "─".repeat(w).blue().bold());
+    println!();
     for i in list {
-        if i.completed {
-            let s = format!("{} {:03}: {}", "󰄲".blue(), i.id, i.title).strikethrough().bright_black();
-            println!("{}", s);
-        } else {
-            let s = format!("{} {:03}: {}", "󰄱".red(), i.id, i.title);
-            println!("{}", s);
-        }
+        let s = if i.completed { format!("{} {:03}: {}", "󰄲".blue(), i.id, i.title).strikethrough().bright_black().to_string() } else { format!("{} {:03}: {}", "󰄱".red(), i.id, i.title).to_string() };
+        let s_no_ansi = re.replace_all(&s, "");
+        let padding = (w - s_no_ansi.chars().count()) / 2;
+        max_p.push(padding);
     }
-    
+    for i in list {
+        let s = if i.completed { format!("{} {:03}: {}", "󰄲".blue(), i.id, i.title).strikethrough().bright_black().to_string() } else { format!("{} {:03}: {}", "󰄱".red(), i.id, i.title).to_string() };
+        let padding = max_p.iter().min().unwrap();
+        println!("{:padding$}{}", "", s, padding = padding);
+    }
+    println!();
+}
+
+fn center_print(s: &String) {
+    let re = Regex::new("\x1b\\[([0-9]+;)*[0-9]*m").unwrap();
+    let w = term_size::dimensions().unwrap().0;
+    let s_no_ansi = re.replace_all(s, "");
+    let padding = (w - s_no_ansi.chars().count()) / 2;
+    println!("{:padding$}{}", "", s, padding = padding);
 }
 
 fn read_command(list: &Vec<TodoItem>) -> String {
-    println!("{}", progress_bar(list));
+    let bar = progress_bar(list);
+    center_print(&bar.0);
+    center_print(&bar.1);
     print!("> ");
     io::stdout().flush().expect("Failed to flush stdout");
     let mut input = String::new();
@@ -94,10 +114,10 @@ fn read_command(list: &Vec<TodoItem>) -> String {
     input.trim().to_string()
 }
 
-fn progress_bar(list: &Vec<TodoItem>) -> String {
+fn progress_bar(list: &Vec<TodoItem>) -> (String, String) {
     let total_items = list.len();
     let completed_items = list.iter().filter(|item| item.completed).count();
-    let progress_bar_length = 28;
+    let progress_bar_length = term_size::dimensions().unwrap().0 - 10;
     let progress = if total_items > 0 {
         completed_items as f32 / total_items as f32
     } else {
@@ -107,10 +127,10 @@ fn progress_bar(list: &Vec<TodoItem>) -> String {
     let progress_bar_empty = progress_bar_length - progress_bar_filled;
     let progress_bar = format!(
         "{}{}",
-        "─".repeat(progress_bar_filled).bright_green(),
-        "─".repeat(progress_bar_empty).bright_black()
+        "─".repeat(progress_bar_filled).bright_green().bold(),
+        "─".repeat(progress_bar_empty).red()
     );
-    format!("{} {}/{}", progress_bar, completed_items, total_items)
+    (format!("{}", progress_bar), format!("{}/{}", completed_items, total_items))
 }
 
 fn parse_command(input: &str, list: &mut Vec<TodoItem>) {
